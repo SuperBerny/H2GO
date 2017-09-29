@@ -12,7 +12,6 @@ window.onload=(function() {
   const nbBtnLogin=document.getElementById('nbBtnLogin');
   const nbBtnLogout=document.getElementById('nbBtnLogout');
   const nbBtnSignUp=document.getElementById('nbBtnSignUp');
-  var firebaseUser;
 
   // open login modal
   nbBtnLogin.addEventListener('click', e=> {
@@ -49,16 +48,16 @@ window.onload=(function() {
     modalSignUp.style.display = "none";    
     console.log(dispName);
     // sign in
-    var promise = auth.createUserWithEmailAndPassword(email, pass).then(function(user){
+    const promise = auth.createUserWithEmailAndPassword(email, pass).then(function(user){
       console.log("user created ", user);
         // [END createwithemail]
+        // callSomeFunction(); Optional
+        // var user = firebase.auth().currentUser;
         user.updateProfile({
             displayName: dispName
         }).then(function() {
             // Update successful.
-            var loggedIn = $("#nbBtnLogin");
-            $(loggedIn).replaceWith("<button class='btn btn-outline-success my-2 my-sm-0 btn-static'>" + "<span class='glyphicon glyphicon-tint blue'></span>" + "Username: " + firebaseUser.displayName + "</button>");
-            
+            $("#loggedInAs").html("Logged in as: " + user.displayName + "   ");
         }, function(error) {
             // An error happened.
         });        
@@ -72,8 +71,9 @@ window.onload=(function() {
         } else {
             console.error(error);
             alert(error);
+            
         }     
-        // [END_EXCLUDE]
+        
     })
   });
 
@@ -81,6 +81,8 @@ window.onload=(function() {
     console.log("btnLogout clicked");
     $("#loggedInAs").html("");
     firebase.auth().signOut();
+    location.reload();
+
   });
 
   // add real time listener
@@ -96,7 +98,7 @@ window.onload=(function() {
       nbBtnLogin.classList.add('hide');
       nbBtnSignUp.classList.add('hide');
       console.log(firebaseUser.hasOwnProperty('displayName'), firebaseUser.displayName);
-    if(firebaseUser.displayName === undefined || firebaseUser.displayName === null) {
+      if(firebaseUser.displayName === undefined || firebaseUser.displayName === null) {
         return;
       } else {
         var loggedIn = $("#nbBtnLogin");

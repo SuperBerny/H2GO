@@ -52,8 +52,6 @@ function initMap() {
       reference: locationName,
       idNum: spotId});
 
-
-
         //display() is the ajax call for spitcast to display spot information
         function display(){
         var location = spotNum;
@@ -212,7 +210,7 @@ function initMap() {
                 
                 console.log(searchValue);
                 console.log(surfLocs[key].spot_name);
-                if (surfLocs[key].spot_name == searchValue){
+                if (surfLocs[key].spot_name.toLowerCase() == searchValue){
                   console.log("match found");
                   isFound = true;
                   
@@ -231,10 +229,53 @@ function initMap() {
               if(isFound == true){
                 display();
               }
+              else if(isFound == false){
+                var errorBox = '<div id="infoWindow"><h3>Sorry, No search results found :(</h3>';
+                //var latlng = map.getCenter();
+
+                var infoWindow3 = new google.maps.InfoWindow({
+                      content: errorBox
+                    });
+                    infoWindow3.open(map);
+
+              }
               });
           }
 
-  
+      /*
+      document.getElementById('search').onclick = function() {
+        event.preventDefault();
+        var searchValue = document.getElementById("searchval").value.trim();
+        console.log(searchValue);
+        var temp = searchValue.toLowerCase();
+        var queryURL6 = "http://api.spitcast.com/api/county/spots/san-diego/";
+        //ajax call
+          $.ajax({
+            url: queryURL6,
+            method: "GET"
+          })
+          .done(function(response6){
+            console.log(response6);
+            var found = false;
+            for(var i=0; i < response6.length; i++){
+              if(temp === response6[i].spot_name.toLowerCase().trim()){
+                spotNum = response6[i].spot_id;
+
+                console.log(spotNum);
+
+                found = true;
+            }
+          }
+            if(found === false){
+              alert("No results found.");
+            }
+            else if(found === true){
+              display();
+            }
+          });
+      };
+      */
+
       // mouse over funtions
       var infoWindow2 = new google.maps.InfoWindow({
       content: '<p>'+ marker.reference +'</p>'
@@ -282,6 +323,9 @@ loginBtn.onclick = function() {
 $(".close").on('click', function(){
   modal.style.display = "none";
 })
+// span.onclick = function() {
+//     modal.style.display = "none";
+// }
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function(event) {
     if (event.target == modal) {
